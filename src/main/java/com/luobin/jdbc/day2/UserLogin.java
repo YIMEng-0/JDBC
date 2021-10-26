@@ -66,12 +66,12 @@ public class UserLogin {
             // 6、进行查询后的数据处理
             if (rs.next()) {
                 String getScannerUserName = rs.getString("loginName");
-//                System.out.println(getScannerUserName);
+                System.out.println(getScannerUserName);
                 String getScannerUserPwd = rs.getString("loginPwd");
-//                System.out.println(getScannerUserPwd);
+                System.out.println(getScannerUserPwd);
 
-//                System.out.println(loginName);
-//                System.out.println(loginPwd);
+                System.out.println(loginName);
+                System.out.println(loginPwd);
                 if (getScannerUserName.equals(loginName) && getScannerUserPwd.equals(loginPwd)) {
                     loginSuccess = true;
                 }
