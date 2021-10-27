@@ -11,7 +11,16 @@ import java.util.Scanner;
  * @version 1.0
  * @date 2021/10/26 4:59 下午
  */
-public class UserLogin {
+
+/**
+ * 对于 SQL 注入问题的合理解决：
+ *      用户对于提供的信息是不参与 SQL 语句编译的过程，问题就会解决；
+ *      为了保证用户输入的东西不参与编译，在这里，使用了 java.sql.PreparedStatement 继承了 java.sql.statement ；
+ *
+ *      PreparedStatement 属于预编译的数据库对象，原理是什么？
+ *          预先对于 SQL 语句框架进行编译，然后对于 SQL 语句进行值得传递；
+ */
+public class UserLogin解决sql注入问题 {
     public static void main(String[] args) {
         // 初始化界面
         Map<String, String> userLoginInfo = initUI();
@@ -34,7 +43,7 @@ public class UserLogin {
 
         // JDBC 代码的实现
         Connection conn = null;
-        Statement stmt = null;
+        PreparedStatement ps = null; //Prepared 预编译的  这里使用了预编译的数据库操作对象
         ResultSet rs = null;
 
         // 进行配置文件的获取
@@ -54,27 +63,27 @@ public class UserLogin {
             // 2、进行数据库连接
             conn = DriverManager.getConnection(url, username, password);
 
-            // 3、进行sql 运行环境的创建
-            stmt = conn.createStatement();
+            // 3、获取预编译的数据库操作对象
+            // 建立了 SQL 语句的框架
+            // ？ 一个  ？ 表示一个占位符，将来接受一个值，占位符不能使用 '' 进行括起来的
+            String sql = "select * from t_user where loginName = ? and loginPwd = ?"; // ? 叫做占位符，只能填充占位符
+            // 注意是 英语 ? 不是 中文 ？
+            ps = conn.prepareStatement(sql);
+            /**
+             * 给占位符进行值得传递
+             *      第一个 ？ 的下标是 1 第二个 ？ 下标是 2
+             */
+            // 在前面SQL 语句已经完成了编译工作，在这里随意传入，已经不起到作用了；破解不了了
+            ps.setString(1,loginName);
+            ps.setString(2,loginPwd);
 
-            // 4、进行SQL 语句的书写
-            String sql = "select * from t_user where loginName = '" + loginName + "' and '" + loginPwd + "'";
+            // 4、执行SQL
+            // 下面的 sql 语句的正常书写中，'"+loginName+"' 只是判断其条件是否相等的一个条件，比如判断 loginName = loginName而已
+            rs = ps.executeQuery();
 
-            // 5、执行SQL 语句
-            rs = stmt.executeQuery(sql);
-
-            // 6、进行查询后的数据处理
+            // 5、处理结果数据集
             if (rs.next()) {
-                String getScannerUserName = rs.getString("loginName");
-                System.out.println(getScannerUserName);
-                String getScannerUserPwd = rs.getString("loginPwd");
-                System.out.println(getScannerUserPwd);
-
-                System.out.println(loginName);
-                System.out.println(loginPwd);
-                if (getScannerUserName.equals(loginName) && getScannerUserPwd.equals(loginPwd)) {
-                    loginSuccess = true;
-                }
+                loginSuccess = true;
             }
 
         } catch (ClassNotFoundException e) {
@@ -90,9 +99,9 @@ public class UserLogin {
                 }
             }
 
-            if (stmt != null) {
+            if (ps != null) {
                 try {
-                    stmt.close();
+                    ps.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

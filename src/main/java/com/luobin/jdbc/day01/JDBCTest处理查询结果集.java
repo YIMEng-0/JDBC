@@ -1,7 +1,5 @@
 package com.luobin.jdbc.day01;
 
-import javax.swing.*;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.sql.*;
 import java.util.ResourceBundle;
 
@@ -9,6 +7,14 @@ import java.util.ResourceBundle;
  * @author Doraemon
  * @version 1.0
  * @date 2021/10/26 3:34 下午
+ */
+
+/**
+ * sql 注入的漏洞（sql 注入现象）
+ *     黑客技术
+ *
+ * sql 注入的根本原因是什么？
+ *      用户输入的信息中含有 sql 的关键字，并且关键字参与到了 sql 语句的编译过程，导致了 sql 的愿意被扭曲，达到 sql 注入；
  */
 public class JDBCTest处理查询结果集 {
     public static void main(String[] args) {
@@ -26,7 +32,7 @@ public class JDBCTest处理查询结果集 {
             Class.forName("com.mysql.jdbc.Driver");
 
             // 2、获取连接
-            conn = DriverManager.getConnection(url,username,password);
+            conn = DriverManager.getConnection(url, username, password);
 
             // 3、获取数据库操作对象
             stmt = conn.createStatement();
@@ -37,6 +43,8 @@ public class JDBCTest处理查询结果集 {
              * executeQuery(select)
              */
             String sql = "select empno as a,ename,sal from emp";
+            // 上面的代码完成了 sql 语句的拼接，下面代码的含义是：发送 sql语句 到 DBMS，DBMS 进行 sql 语句的编写
+            // 将用户提供的非法语句进行了编译，导致了原来的 sql 语句的含义被扭曲了
             rs = stmt.executeQuery(sql); // execuQuery 专门执行查询语言的；返回单个的 result 对象
             /** rs 里面实际存储的数据
              * 7369	SMITH	800.00
@@ -74,7 +82,7 @@ public class JDBCTest处理查询结果集 {
             e.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
+        } finally {
             // 6、进行资源释放以及关闭 conn
             if (rs != null) {
                 try {

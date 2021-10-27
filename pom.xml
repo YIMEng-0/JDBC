@@ -11,6 +11,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <kotlin.version>1.6.0-RC</kotlin.version>
     </properties>
 
     <dependencies>
@@ -20,4 +21,5 @@
             <version>8.0.17</version>
         </dependency>
     </dependencies>
+
 </project>
