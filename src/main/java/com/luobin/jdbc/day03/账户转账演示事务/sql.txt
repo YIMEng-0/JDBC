@@ -1,0 +1,15 @@
+drop table if exists t_act
+create table t_act(
+    actno int,
+    balance double(7,2)
+);
+insert into t_act(actno,balance) values(111,20000);
+insert into t_act(actno,balance) values(222,0);
+commit;
+select * from t_act;
+
+drop table if exists t_act
+create table t_act(
+    actno bigint,
+    balance double(7,2) // 7 表示有效数字的位数，2 表示小数位的个数
+);
