@@ -1,4 +1,4 @@
-package com.luobin.jdbc.day2;
+package com.luobin.jdbc.day02;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.Scanner;
  * 解决 sql 注入问题的关键是什么？
  *      即使用户在输入的过程中进行了输入，但是不起到相关的作用；
  */
-public class UserLoginSql注入问题 {
+public class UserLoginSql注入问题02 {
     public static void main(String[] args) {
         // 初始化界面
         Map<String, String> userLoginInfo = initUI();

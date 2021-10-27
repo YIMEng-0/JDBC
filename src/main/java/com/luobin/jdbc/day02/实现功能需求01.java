@@ -1,11 +1,11 @@
-package com.luobin.jdbc.day2;
+package com.luobin.jdbc.day02;
 
 /**
  * @author Doraemon
  * @version 1.0
  * @date 2021/10/26 4:36 下午
  */
-public class 实现功能需求 {
+public class 实现功能需求01 {
     /**
      * 1、需求：
      *      模拟用户登录的代码实现

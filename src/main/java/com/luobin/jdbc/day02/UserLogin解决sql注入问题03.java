@@ -1,4 +1,4 @@
-package com.luobin.jdbc.day2;
+package com.luobin.jdbc.day02;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -19,8 +19,25 @@ import java.util.Scanner;
  *
  *      PreparedStatement 属于预编译的数据库对象，原理是什么？
  *          预先对于 SQL 语句框架进行编译，然后对于 SQL 语句进行值得传递；
+ *
+ *
  */
-public class UserLogin解决sql注入问题 {
+
+/**
+ * 对比： Statement preparedStatement
+ *      Statement 存在 SQL 注入的问题，但是在 PreparedStatement 解决了 SQL 注入的问题；
+ *      PreparedStatement 执行的效率也是更高的；
+ *
+ *      Statement 编译一次，执行一次；
+ *      PreparedStatement 编译一次，执行多次；
+ *
+ *      PreparedStatement 会在编译时进行格式的验证，相比较 Statement 来讲，会更加的安全一点；
+ */
+
+/**
+ * 在 SQL 语句中，书写了两条一模一样的 SQL 语句，SQL 只是会执行一次，为了提高程序的运行效率的一种机制
+ */
+public class UserLogin解决sql注入问题03 {
     public static void main(String[] args) {
         // 初始化界面
         Map<String, String> userLoginInfo = initUI();
@@ -43,7 +60,7 @@ public class UserLogin解决sql注入问题 {
 
         // JDBC 代码的实现
         Connection conn = null;
-        PreparedStatement ps = null; //Prepared 预编译的  这里使用了预编译的数据库操作对象
+        PreparedStatement ps = null; //PreparedStatement 预编译的  这里使用了预编译的数据库操作对象
         ResultSet rs = null;
 
         // 进行配置文件的获取
@@ -68,7 +85,7 @@ public class UserLogin解决sql注入问题 {
             // ？ 一个  ？ 表示一个占位符，将来接受一个值，占位符不能使用 '' 进行括起来的
             String sql = "select * from t_user where loginName = ? and loginPwd = ?"; // ? 叫做占位符，只能填充占位符
             // 注意是 英语 ? 不是 中文 ？
-            ps = conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql); // prepareStatement 是没有 d 的是 conn 的一个方法，有 d 的是一个类，创建预编译的SQL语句
             /**
              * 给占位符进行值得传递
              *      第一个 ？ 的下标是 1 第二个 ？ 下标是 2
@@ -140,3 +157,29 @@ public class UserLogin解决sql注入问题 {
         return userLoginInfo;
     }
 }
+
+/**
+ * 最终的运行结果如下所示：
+ * 因为解决了引入注入失败的问题
+ *
+ * 用户名称：
+ * fdsa
+ * 输入密码：
+ * fdsa' or '1'='1
+ * fail
+ */
+
+/**
+ * 解决 SQL 注入问题的关键：
+ *  即使用户输入的东西含有SQL语句的关键字，那么他不进行编译，就不会出现一系列的错误；
+ *  比如注入错误；
+ */
+
+/**
+ * 大多数的情况下都是需要避免SQL注入的，但是在极少数的情况之下，系统的设计师需要用户进行SQL注入的；
+ *      用户进行SQL注入的时候：
+ *      凡是在业务方面要求使用 SQL 语句进行拼接的时候，需要使用 Statement，使用了注入
+ *
+ *      单纯的 SQL 语句传值，使用 PreparedStatement；
+ *      如果是使用字符串拼接SQL 语句的时候，必须使用注入进行相关 的SQL 操作
+ */
